@@ -1,3 +1,4 @@
+ 
 // Copyright 2019 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +18,7 @@
  */
 function addRandomFact() {
   const facts =
-      ['I am of Panamanian and Puerto Rican heritage', 'I love digital calligraphy', 'I love drinking coffee', 'Ice cream is my favorite food!'];
+      ['I am of Panamanian and Puerto Rican heritage.', 'I love digital calligraphy.', 'I love drinking coffee.', 'Ice cream is my favorite food!'];
 
   // Pick a random fact.
   const fact = facts[Math.floor(Math.random() * facts.length)];
@@ -26,3 +27,6 @@ function addRandomFact() {
   const factContainer = document.getElementById('fact-container');
   factContainer.innerText = fact;
 }
+
+let factButton = document.getElementById('fact-button');
+factButton.addEventListener('click', addRandomFact);
