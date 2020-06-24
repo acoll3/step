@@ -28,5 +28,15 @@ function addRandomFact() {
   factContainer.innerText = fact;
 }
 
+async function getServerContent() {
+    let res = await fetch('/data');
+    let content = await res.text();
+    let resContainer = document.getElementById('res-container');
+    resContainer.innerText = content;
+}
+
 let factButton = document.getElementById('fact-button');
 factButton.addEventListener('click', addRandomFact);
+
+let resButton = document.getElementById('res-button');
+resButton.addEventListener('click', getServerContent);
