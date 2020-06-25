@@ -28,9 +28,21 @@ function addRandomFact() {
   factContainer.innerText = fact;
 }
 
+/** 
+ * Creates an <li> element containing text. 
+ */
+function createListElement(text) {
+  const liElement = document.createElement('li');
+  liElement.innerText = text;
+  return liElement;
+}
+
+/**
+ * Fetches content from the server, parses as JSON, and then adds the content to the page as a list element. 
+ */
 async function getServerContent() {
     let res = await fetch('/data');
-    let content = await res.text();
+    let content = await res.json();
     let resContainer = document.getElementById('res-container');
     resContainer.innerText = content;
 }
