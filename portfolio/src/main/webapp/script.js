@@ -16,17 +16,17 @@
 /**
  * Adds a random fact about Andrea to the page.
  */
-function addRandomFact() {
-  const facts =
-      ['I am of Panamanian and Puerto Rican heritage.', 'I love digital calligraphy.', 'I love drinking coffee.', 'Ice cream is my favorite food!'];
+// function addRandomFact() {
+//   const facts =
+//       ['I am of Panamanian and Puerto Rican heritage.', 'I love digital calligraphy.', 'I love drinking coffee.', 'Ice cream is my favorite food!'];
 
-  // Pick a random fact.
-  const fact = facts[Math.floor(Math.random() * facts.length)];
+//   // Pick a random fact.
+//   const fact = facts[Math.floor(Math.random() * facts.length)];
 
-  // Add it to the page.
-  const factContainer = document.getElementById('fact-container');
-  factContainer.innerText = fact;
-}
+//   // Add it to the page.
+//   const factContainer = document.getElementById('fact-container');
+//   factContainer.innerText = fact;
+// }
 
 /** 
  * Creates an <li> element containing text. 
@@ -37,18 +37,28 @@ function createListElement(text) {
   return liElement;
 }
 
+// /**
+//  * Fetches content from the server, parses as JSON, and then adds the content to the page as a list element. 
+//  */
+// async function getServerContent() {
+//     let res = await fetch('/data');
+//     let content = await res.json();
+//     let resContainer = document.getElementById('res-container');
+//     resContainer.innerText = content;
+// }
+
 /**
  * Fetches content from the server, parses as JSON, and then adds the content to the page as a list element. 
  */
-async function getServerContent() {
+window.onload = async function getComments() {
     let res = await fetch('/data');
-    let content = await res.json();
-    let resContainer = document.getElementById('res-container');
-    resContainer.innerText = content;
+    let comments = await res.json();
+    let parentList = document.getElementById("comments");
+    comments.forEach(comment => parentList.appendChild(createListElement(comment)));
 }
 
-let factButton = document.getElementById('fact-button');
-factButton.addEventListener('click', addRandomFact);
+// let factButton = document.getElementById('fact-button');
+// factButton.addEventListener('click', addRandomFact);
 
-let resButton = document.getElementById('res-button');
-resButton.addEventListener('click', getServerContent);
+// let resButton = document.getElementById('res-button');
+// resButton.addEventListener('click', getServerContent);

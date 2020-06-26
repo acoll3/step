@@ -26,12 +26,19 @@ import com.google.gson.*;
 /** Servlet that returns some example content. */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
-  ArrayList<String> comments = new ArrayList<String>(Arrays.asList("apple", "banana", "carrot"));
+  ArrayList<String> comments = new ArrayList<String>();
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("text/html;");
     response.getWriter().println(convertToJsonUsingGson(this.comments));
+  }
+
+   @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    String comment = request.getParameter("comment-input");
+    this.comments.add(comment);
+    response.sendRedirect("/index.html");
   }
 
   /**

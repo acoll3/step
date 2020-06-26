@@ -40,10 +40,11 @@
     </div>
 
     <div id="footer"> 
-        <button id="fact-button" type="button">Get a Fact About Me</button>
-        <p id="fact-container"></p>
-        <button id="res-button" type="button">Get a Response From the Server</button>
-        <p id="res-container"></p>
+        <form action="/data" method="POST">
+            <input type="text" name="comment-input" id="comment-input">
+            <input type="submit">
+        </form>
+        <ul id="comments" >Comments</ul>
     </div>
   </body>
 </html>
