@@ -27,7 +27,11 @@ function createListElement(text) {
  * Fetches content from the server, parses as JSON, and then adds the content to the page as a list element. 
  */
 window.onload = async function getComments() {
-    let res = await fetch('/data');
+    let numComments = document.getElementById('count-options').value;
+    let path = '/data?number=' + numComments;
+    console.log(path);
+    let res = await fetch(path);
+    console.log(res);
     let comments = await res.json();
     let parentList = document.getElementById("comments");
     comments.forEach(comment => parentList.appendChild(createListElement(comment)));

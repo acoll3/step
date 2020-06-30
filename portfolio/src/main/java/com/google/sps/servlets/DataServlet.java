@@ -15,8 +15,7 @@
 package com.google.sps.servlets;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -37,12 +36,15 @@ public class DataServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
+    int numComments = Integer.parseInt(request.getParameter("number"));
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
 
     ArrayList<String> comments = new ArrayList<String>();
-    for (Entity e : results.asIterable()) {
+    Iterator<Entity> iter = results.asIterable().iterator();
+    for (int i = 0; i < numComments; i++) {
+        Entity e = iter.next();
         String comment = (String) e.getProperty("text");
         comments.add(comment);
     }
