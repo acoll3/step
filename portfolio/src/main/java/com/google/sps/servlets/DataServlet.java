@@ -26,6 +26,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.RequestDispatcher;
 import com.google.gson.*;
 
 /** Servlet that returns some example content. */
@@ -60,7 +61,7 @@ public class DataServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     Entity taskEntity = new Entity("Comment");
     taskEntity.setProperty("text", comment);
-     taskEntity.setProperty("timestamp", timestamp);
+    taskEntity.setProperty("timestamp", timestamp);
     datastore.put(taskEntity);
 
     response.sendRedirect("/index.html");
