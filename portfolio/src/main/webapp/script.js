@@ -13,52 +13,67 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/**
- * Adds a random fact about Andrea to the page.
- */
-// function addRandomFact() {
-//   const facts =
-//       ['I am of Panamanian and Puerto Rican heritage.', 'I love digital calligraphy.', 'I love drinking coffee.', 'Ice cream is my favorite food!'];
+class Portfolio {
+    /**
+    * Creates a new Portfolio web app with a number of comments specified by the user.
+    */
+    constructor() {
+        this.numComments = document.getElementById('count-options').value;
+    }
 
-//   // Pick a random fact.
-//   const fact = facts[Math.floor(Math.random() * facts.length)];
+    /**
+    * Sets up the Portfolio by getting comment data from the servlet.
+    */
+    async setup() {
+        await this.getComments();
+    }
 
-//   // Add it to the page.
-//   const factContainer = document.getElementById('fact-container');
-//   factContainer.innerText = fact;
-// }
+    /**
+    * Removes all comments from the DOM.
+    */
+    removeComments() {
+        this.numComments = document.getElementById('count-options').value;
+        let parentList = document.getElementById("comments");
+        parentList.innerHTML = '';
+    }
 
-/** 
- * Creates an <li> element containing text. 
- */
-function createListElement(text) {
-  const liElement = document.createElement('li');
-  liElement.innerText = text;
-  return liElement;
+    /** 
+    * Creates an <li> element containing text. 
+    */
+    createListElement(text) {
+        const liElement = document.createElement('li');
+        liElement.innerText = text;
+        return liElement;
+    }
+
+    /**
+    * Fetches content from the server, parses as JSON, and then adds the content to the page as a list element. 
+    */
+    async getComments() {
+        let path = '/data?number=' + this.numComments;
+        let res = await fetch(path);
+
+        /* Check for errors in the HTTP response and alert the user. */
+        if (res.status == 500) {
+            alert('Error: Cannot display ' + this.numComments + 
+            ' comments because fewer than ' + this.numComments + ' comments exist.');
+        }
+        else if (res.status != 200) {
+            alert('Error generated in HTTP response from servlet');
+        }
+
+        let comments = await res.json();
+        let parentList = document.getElementById("comments");
+        comments.forEach(comment => parentList.appendChild(this.createListElement(comment)));
+    }
 }
 
-// /**
-//  * Fetches content from the server, parses as JSON, and then adds the content to the page as a list element. 
-//  */
-// async function getServerContent() {
-//     let res = await fetch('/data');
-//     let content = await res.json();
-//     let resContainer = document.getElementById('res-container');
-//     resContainer.innerText = content;
-// }
-
-/**
- * Fetches content from the server, parses as JSON, and then adds the content to the page as a list element. 
- */
-window.onload = async function getComments() {
-    let res = await fetch('/data');
-    let comments = await res.json();
-    let parentList = document.getElementById("comments");
-    comments.forEach(comment => parentList.appendChild(createListElement(comment)));
+let portfolio = new Portfolio();
+window.onload = async function() {
+    await portfolio.setup();
 }
 
-// let factButton = document.getElementById('fact-button');
-// factButton.addEventListener('click', addRandomFact);
-
-// let resButton = document.getElementById('res-button');
-// resButton.addEventListener('click', getServerContent);
+document.getElementById('count-options').addEventListener('change', async function() {
+    portfolio.removeComments();
+    await portfolio.getComments();
+});

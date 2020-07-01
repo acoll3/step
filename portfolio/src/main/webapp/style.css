@@ -1,5 +1,5 @@
 body {
-    font-family: "Montserrat", "Trebuchet";
+    font-family: "Montserrat";
 }
 
 #header {
@@ -45,11 +45,17 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     width: 20%;
 }
 
 #footer {
+    border-top: 3px solid black;
     display: flex;
     justify-content: center;
+}
+
+#count-options {
+    height: 50%;
 }
 

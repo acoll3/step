@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Andrea Collins's Portfolio</title>
     <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
+    <script type="module" src="script.js" defer></script>
   </head>
   <body>
       <div id="header"> 
@@ -39,12 +39,21 @@
         
     </div>
 
-    <div id="footer"> 
+    <div id="footer">
+        <select name="count-options" id="count-options"> 
+            <option value="1">One</option>
+            <option value="2">Two</option>
+            <option value="3">Three</option>
+            <option value="4">Four</option>
+            <option value="5">Five</option>
+        </select>
         <form action="/data" method="POST">
+            <h3>Leave a comment here!</h3>
             <input type="text" name="comment-input" id="comment-input">
-            <input type="submit">
+            <input type="submit" id="submit">
         </form>
-        <ul id="comments" >Comments</ul>
+        <h3>Comments</h3>
+        <ul id="comments"</ul>
     </div>
   </body>
 </html>
