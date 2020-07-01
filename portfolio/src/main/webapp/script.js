@@ -33,11 +33,8 @@ class Portfolio {
     */
     removeComments() {
         this.numComments = document.getElementById('count-options').value;
-        console.log('removing all comments');
         let parentList = document.getElementById("comments");
-        for (let childComment of parentList.children) {
-            childComment.remove();
-        }
+        parentList.innerHTML = '';
     }
 
     /** 
@@ -55,14 +52,19 @@ class Portfolio {
     async getComments() {
         let path = '/data?number=' + this.numComments;
         let res = await fetch(path);
-        if (res.status != 200) {
+
+        /* Check for errors in the HTTP response and alert the user. */
+        if (res.status == 500) {
+            alert('Error: Cannot display ' + this.numComments + 
+            ' comments because fewer than ' + this.numComments + ' comments exist.');
+        }
+        else if (res.status != 200) {
             alert('Error generated in HTTP response from servlet');
         }
+
         let comments = await res.json();
         let parentList = document.getElementById("comments");
         comments.forEach(comment => parentList.appendChild(this.createListElement(comment)));
-        console.log("getting new comments from servlet");
-        console.log("got " + this.numComments + " comments");
     }
 }
 
