@@ -44,23 +44,11 @@ public class DeleteDataServlet extends HttpServlet {
     for (Entity e : results.asIterable()) {
         keys.add(e.getKey());
     }
+    datastore.delete(keys);
 
-    // Iterator<Entity> iter = results.asIterable().iterator();
-    // for (int i = 0; i < results.asIterable().size(); i++) {
-    //     Entity e = iter.next();
-    //     Key key = e.getKey();
-        
-    // }
-
+    response.setContentType("application/json;");
+    response.getWriter().println("");
     response.sendRedirect("/index.html");
   }
 
-  /**
-   * Converts an ArrayList instance into a JSON string using the Gson library.
-   */
-  private String convertToJsonUsingGson(ArrayList<String> comments) {
-    Gson gson = new Gson();
-    String json = gson.toJson(comments);
-    return json;
-  }
 }

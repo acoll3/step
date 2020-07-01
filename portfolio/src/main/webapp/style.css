@@ -55,7 +55,8 @@ body {
     justify-content: center;
 }
 
-#count-options {
+#count-options, #delete-button {
     height: 50%;
+    margin: 4px;
 }
 
