@@ -21,6 +21,7 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -30,47 +31,24 @@ import javax.servlet.RequestDispatcher;
 import com.google.gson.*;
 
 /** Servlet that returns some example content. */
-@WebServlet("/data")
-public class DataServlet extends HttpServlet {
-  @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
-    int numComments = Integer.parseInt(request.getParameter("number"));
-
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    PreparedQuery results = datastore.prepare(query);
-
-    ArrayList<String> comments = new ArrayList<String>();
-    Iterator<Entity> iter = results.asIterable().iterator();
-    for (int i = 0; i < numComments; i++) {
-        Entity e = iter.next();
-        String comment = (String) e.getProperty("text");
-        comments.add(comment);
-    }
-    response.setContentType("application/json;");
-    response.getWriter().println(convertToJsonUsingGson(comments));
-  }
+@WebServlet("/delete-data")
+public class DeleteDataServlet extends HttpServlet {
 
    @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String comment = request.getParameter("comment-input");
-    long timestamp = System.currentTimeMillis();
-
+    Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    Entity taskEntity = new Entity("Comment");
-    taskEntity.setProperty("text", comment);
-    taskEntity.setProperty("timestamp", timestamp);
-    datastore.put(taskEntity);
+    PreparedQuery results = datastore.prepare(query);
 
+    ArrayList<Key> keys = new ArrayList<Key>();
+    for (Entity e : results.asIterable()) {
+        keys.add(e.getKey());
+    }
+    datastore.delete(keys);
+
+    response.setContentType("application/json;");
+    response.getWriter().println("");
     response.sendRedirect("/index.html");
   }
 
-  /**
-   * Converts an ArrayList instance into a JSON string using the Gson library.
-   */
-  private String convertToJsonUsingGson(ArrayList<String> comments) {
-    Gson gson = new Gson();
-    String json = gson.toJson(comments);
-    return json;
-  }
 }

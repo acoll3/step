@@ -66,12 +66,30 @@ class Portfolio {
         let parentList = document.getElementById("comments");
         comments.forEach(comment => parentList.appendChild(this.createListElement(comment)));
     }
+
+    /**
+    * Deletes all comments from the datastore.
+    */
+    async deleteComments() {
+        let path = '/delete-data';
+        let res = await fetch(path, { method: 'POST' });
+
+        /* Check for errors in the HTTP response and alert the user. */
+        if (res.status != 200) {
+            alert('Error generated in HTTP response from servlet');
+        }
+    }
 }
 
 let portfolio = new Portfolio();
 window.onload = async function() {
     await portfolio.setup();
 }
+
+document.getElementById('delete-button').addEventListener('click', async function() {
+    await portfolio.deleteComments();
+    portfolio.removeComments();
+});
 
 document.getElementById('count-options').addEventListener('change', async function() {
     portfolio.removeComments();
