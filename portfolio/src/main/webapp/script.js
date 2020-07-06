@@ -53,12 +53,14 @@ class Portfolio {
         let path = '/data?number=' + this.numComments;
         let res = await fetch(path);
 
+        console.log(res);
         /* Check for errors in the HTTP response and alert the user. */
-        if (res.status == 500) {
-            alert('Error: Cannot display ' + this.numComments + 
-            ' comments because fewer than ' + this.numComments + ' comments exist.');
-        }
-        else if (res.status != 200) {
+        if (res.status == 404){
+            alert("Empty datastore.");
+        } else if (res.status == 500) {
+            alert('Error: invalid count requested. Fewer than ' + this.numComments + ' comments exist.');
+        } else 
+        if (res.status != 200) {
             alert('Error generated in HTTP response from servlet');
         }
 
@@ -79,11 +81,22 @@ class Portfolio {
             alert('Error generated in HTTP response from servlet');
         }
     }
+
+    createMap() {
+        console.log('adding new map!');
+        const map = new google.maps.Map(
+        document.getElementById('alps'),
+        {center: {lat: 37.422, lng: -122.084}, zoom: 16});
+    }
 }
 
 let portfolio = new Portfolio();
 window.onload = async function() {
     await portfolio.setup();
+}
+
+document.getElementsByTagName("body").onload = function() {
+    portfolio.createMap();
 }
 
 document.getElementById('delete-button').addEventListener('click', async function() {
@@ -95,3 +108,7 @@ document.getElementById('count-options').addEventListener('change', async functi
     portfolio.removeComments();
     await portfolio.getComments();
 });
+
+// document.getElementById('maps').onload = function() {
+//     portfolio.createMap();
+// }

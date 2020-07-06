@@ -41,7 +41,7 @@ body {
     padding: 5px;
 }
 
-#links {
+#maps {
     display: flex;
     flex-direction: column;
     align-items: center;
