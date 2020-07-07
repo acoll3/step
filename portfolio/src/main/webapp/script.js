@@ -19,6 +19,11 @@ class Portfolio {
     */
     constructor() {
         this.numComments = document.getElementById('count-options').value;
+        this.visitLocs = { glacier: {lat: 48.760815, lng: -113.786722}, 
+            edinburgh: {lat: 55.943914, lng: -3.21689}, 
+            sanblas: {lat: 9.5702911, lng: -78.9272882}, 
+            fjord: {lat: -45.4572629, lng: 167.2282707} };
+        this.parkLocs = { zion: { lat: 41.8097352, lng: -87.9819217 } };
     }
 
     /**
@@ -27,7 +32,7 @@ class Portfolio {
     async setup() {
         await this.getComments();
         this.setupPlaceMaps();
-        this.setupRestaurantMap();
+        this.setupParkMap();
     }
 
     /**
@@ -94,7 +99,7 @@ class Portfolio {
                 case 0:
                     mapOptions = {
                         zoom: 8,
-                        center: {lat: 48.760815, lng: -113.786722},
+                        center: this.visitLocs.glacier
                     };
                     this.createMap(mapOptions, 'glacier');
                     break;
@@ -102,7 +107,7 @@ class Portfolio {
                 case 1:
                     mapOptions = {
                         zoom: 8,
-                        center: {lat: 55.943914, lng: -3.21689},
+                        center: this.visitLocs.edinburgh,
                     };
                     this.createMap(mapOptions, 'edinburgh');
                     break;
@@ -110,7 +115,7 @@ class Portfolio {
                 case 2:
                     mapOptions = {
                         zoom: 8,
-                        center: {lat: 9.5702911, lng: -78.9272882},
+                        center: this.visitLocs.sanblas,
                     };
                     this.createMap(mapOptions, 'sanblas');
                     break;
@@ -118,7 +123,7 @@ class Portfolio {
                 case 3:
                     mapOptions = {
                         zoom: 8,
-                        center: {lat: -45.4572629, lng: 167.2282707}
+                        center: this.visitLocs.fjord
                     };
                     this.createMap(mapOptions, 'fjord');
                     break;
@@ -129,12 +134,18 @@ class Portfolio {
     /**
     * Creates a single map with the given options.
     */
-    setupRestaurantMap() {
+    setupParkMap() {
+        let usa = { lat: 44.0733586, lng: -97.5443135 };
         let mapOptions = {
-            zoom: 8,
-            center: {lat: 41.781079, lng: -88.382634}
+            zoom: 3,
+            center: usa
         };
-        this.createMap(mapOptions, 'restaurants');
+        let map = this.createMap(mapOptions, 'parks');
+
+        for (let loc of Object.entries(this.parkLocs)) {
+            let marker = new google.maps.Marker({position: loc[1], map: map});
+        }
+
     }
 
     /**
@@ -144,8 +155,8 @@ class Portfolio {
         const map = new google.maps.Map(
             document.getElementById(id),
             mapOptions);
-        
         map.setTilt(45);
+        return map;
     }
 }
 

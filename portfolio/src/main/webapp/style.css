@@ -26,6 +26,7 @@
 
 #gallery >img {
     width: 80%;
+    margin: 3px;
 }
 
 #thoughts {
