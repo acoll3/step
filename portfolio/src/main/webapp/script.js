@@ -19,11 +19,16 @@ class Portfolio {
     */
     constructor() {
         this.numComments = document.getElementById('count-options').value;
-        this.visitLocs = { glacier: {lat: 48.760815, lng: -113.786722}, 
-            edinburgh: {lat: 55.943914, lng: -3.21689}, 
-            sanblas: {lat: 9.5702911, lng: -78.9272882}, 
-            fjord: {lat: -45.4572629, lng: 167.2282707} };
-        this.parkLocs = { zion: { lat: 41.8097352, lng: -87.9819217 } };
+        this.visitLocs = {  glacier: { lat: 48.760815, lng: -113.786722 }, 
+                            edinburgh: { lat: 55.943914, lng: -3.21689 }, 
+                            sanblas: { lat: 9.5702911, lng: -78.9272882 }, 
+                            fjord: { lat: -45.4572629, lng: 167.2282707 } 
+                         };
+        this.parkLocs = { zion: { lat: 37.3220096, lng: -113.1833194 } ,
+                          rockyMountain: { lat: 40.3503939, lng: -105.9566636 },
+                          grandTeton: { lat: 43.6594418, lng: -111.000682 },
+                          joshuaTree: { lat: 33.8987129, lng: -116.4211304},
+                        };
     }
 
     /**
@@ -93,46 +98,19 @@ class Portfolio {
     */
     setupPlaceMaps() {
         let mapOptions;
-        for (let i = 0; i < 4; i++) {
-            switch(i) {
-                /* Glacier National Park */
-                case 0:
-                    mapOptions = {
-                        zoom: 8,
-                        center: this.visitLocs.glacier
-                    };
-                    this.createMap(mapOptions, 'glacier');
-                    break;
-                /* Edinburgh */
-                case 1:
-                    mapOptions = {
-                        zoom: 8,
-                        center: this.visitLocs.edinburgh,
-                    };
-                    this.createMap(mapOptions, 'edinburgh');
-                    break;
-                /* San Blas Islands */
-                case 2:
-                    mapOptions = {
-                        zoom: 8,
-                        center: this.visitLocs.sanblas,
-                    };
-                    this.createMap(mapOptions, 'sanblas');
-                    break;
-                /* Fjordland National Park */
-                case 3:
-                    mapOptions = {
-                        zoom: 8,
-                        center: this.visitLocs.fjord
-                    };
-                    this.createMap(mapOptions, 'fjord');
-                    break;
-            }
+
+        for (let loc of Object.entries(this.visitLocs)) {
+            mapOptions = {  
+                            zoom: 8,
+                            center: loc[1]
+                        };
+            this.createMap(mapOptions, loc[0]);
         }
+
     }
 
     /**
-    * Creates a single map with the given options.
+    * Creates a map with pins of my favorite national parks.
     */
     setupParkMap() {
         let usa = { lat: 44.0733586, lng: -97.5443135 };
