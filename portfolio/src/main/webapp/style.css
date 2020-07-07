@@ -1,4 +1,5 @@
-body {
+ html, body {
+    height: 100%;
     font-family: "Montserrat";
 }
 
@@ -45,9 +46,13 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     width: 20%;
 }
+
+#map {
+    height: 25%;
+    width: 100%;
+} 
 
 #footer {
     border-top: 3px solid black;
