@@ -49,9 +49,10 @@
     width: 20%;
 }
 
-#map {
+.map {
     height: 25%;
     width: 100%;
+    margin: 3px;
 } 
 
 #footer {

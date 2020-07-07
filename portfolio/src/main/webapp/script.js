@@ -26,6 +26,8 @@ class Portfolio {
     */
     async setup() {
         await this.getComments();
+        this.setupPlaceMaps();
+        this.setupRestaurantMap();
     }
 
     /**
@@ -81,17 +83,74 @@ class Portfolio {
         }
     }
 
-    createMap() {
-        console.log('adding new map!');
+    /**
+    * Adds four maps to the page showing four places I really want to visit.
+    */
+    setupPlaceMaps() {
+        let mapOptions;
+        for (let i = 0; i < 4; i++) {
+            switch(i) {
+                /* Glacier National Park */
+                case 0:
+                    mapOptions = {
+                        zoom: 8,
+                        center: {lat: 48.760815, lng: -113.786722},
+                    };
+                    this.createMap(mapOptions, 'glacier');
+                    break;
+                /* Edinburgh */
+                case 1:
+                    mapOptions = {
+                        zoom: 8,
+                        center: {lat: 55.943914, lng: -3.21689},
+                    };
+                    this.createMap(mapOptions, 'edinburgh');
+                    break;
+                /* San Blas Islands */
+                case 2:
+                    mapOptions = {
+                        zoom: 8,
+                        center: {lat: 9.5702911, lng: -78.9272882},
+                    };
+                    this.createMap(mapOptions, 'sanblas');
+                    break;
+                /* Fjordland National Park */
+                case 3:
+                    mapOptions = {
+                        zoom: 8,
+                        center: {lat: -45.4572629, lng: 167.2282707}
+                    };
+                    this.createMap(mapOptions, 'fjord');
+                    break;
+            }
+        }
+    }
+
+    /**
+    * Creates a single map with the given options.
+    */
+    setupRestaurantMap() {
+        let mapOptions = {
+            zoom: 8,
+            center: {lat: 41.781079, lng: -88.382634}
+        };
+        this.createMap(mapOptions, 'restaurants');
+    }
+
+    /**
+    * Creates a single map with the given options.
+    */
+    createMap(mapOptions, id) {
         const map = new google.maps.Map(
-            document.getElementById('map'),
-            {center: {lat: 37.422, lng: -122.084}, zoom: 16});
+            document.getElementById(id),
+            mapOptions);
+        
+        map.setTilt(45);
     }
 }
 
 let portfolio = new Portfolio();
 window.onload = async function() {
-    portfolio.createMap();
     await portfolio.setup();
 }
 
