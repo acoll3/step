@@ -57,12 +57,15 @@
     margin: 3px;
 } 
 
-#footer {
-    display: none;
+.footer {
     margin: 3px;
     border-top: 3px solid black;
-    /* display: flex; */
+    display: flex;
     justify-content: center;
+}
+
+#comments-footer {
+    display: none;
 }
 
 #count-options, #delete-button {

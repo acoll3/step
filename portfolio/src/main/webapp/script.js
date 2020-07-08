@@ -43,6 +43,23 @@ class Portfolio {
     /**
     * Removes all comments from the DOM.
     */
+    setupFooter() {
+        let path = 'login';
+        let status = await fetch(path);
+
+        /* If the user is logged in, hide the login link and display the comments form. */
+        if (status === 'true') {
+            document.getElementById('login-footer').display = 'hidden';
+            document.getElementById('comments-footer').display = 'flex';
+        } else { // hide comments and show login if user is not logged in
+            document.getElementById('login-footer').display = 'flex';
+            document.getElementById('comments-footer').display = 'hidden';
+        }
+    }
+
+    /**
+    * Removes all comments from the DOM.
+    */
     removeComments() {
         this.numComments = document.getElementById('count-options').value;
         let parentList = document.getElementById("comments");
@@ -66,9 +83,9 @@ class Portfolio {
         let res = await fetch(path);
 
         /* Check for errors in the HTTP response and alert the user. */
-        if (res.status == 404){
+        if (res.status === 404){
             alert("Empty datastore.");
-        } else if (res.status == 500) {
+        } else if (res.status === 500) {
             alert('Error: invalid count requested. Fewer than ' + this.numComments + ' comments exist.');
         } else 
         if (res.status != 200) {
