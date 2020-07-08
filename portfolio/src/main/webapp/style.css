@@ -58,9 +58,10 @@
 } 
 
 #footer {
+    display: none;
     margin: 3px;
     border-top: 3px solid black;
-    display: flex;
+    /* display: flex; */
     justify-content: center;
 }
 
