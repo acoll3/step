@@ -59,13 +59,23 @@ public class DataServlet extends HttpServlet {
 
    @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    UserService userService = UserServiceFactory.getUserService();
+
+    /* Only logged-in users can post comments. */
+    if (!userService.isUserLoggedIn()) {
+      response.sendRedirect("/index.html");
+      return;
+    }
+
     String comment = request.getParameter("comment-input");
     long timestamp = System.currentTimeMillis();
+    String email = userService.getCurrentUser().getEmail();
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     Entity taskEntity = new Entity("Comment");
     taskEntity.setProperty("text", comment);
     taskEntity.setProperty("timestamp", timestamp);
+    taskEntity.setProperty("email", email);
     datastore.put(taskEntity);
 
     response.sendRedirect("/index.html");

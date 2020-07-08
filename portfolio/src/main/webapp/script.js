@@ -43,7 +43,7 @@ class Portfolio {
     /**
     * Removes all comments from the DOM.
     */
-    setupFooter() {
+    async setupFooter() {
         let path = 'login';
         let status = await fetch(path);
 
@@ -86,9 +86,9 @@ class Portfolio {
         if (res.status === 404){
             alert("Empty datastore.");
         } else if (res.status === 500) {
-            alert('Error: invalid count requested. Fewer than ' + this.numComments + ' comments exist.');
+            alert('Error: invalid count requested.  Fewer than ${this.numComments} comments exist.');
         } else 
-        if (res.status != 200) {
+        if (res.status !== 200) {
             alert('Error generated in HTTP response from servlet');
         }
 
@@ -105,7 +105,7 @@ class Portfolio {
         let res = await fetch(path, { method: 'POST' });
 
         /* Check for errors in the HTTP response and alert the user. */
-        if (res.status != 200) {
+        if (res.status !== 200) {
             alert('Error generated in HTTP response from servlet');
         }
     }
@@ -137,9 +137,8 @@ class Portfolio {
         };
         let map = this.createMap(mapOptions, 'parks');
 
-        for (let loc of Object.entries(this.parkLocs)) {
-            let name = loc[0], pos = loc[1];
-            let marker = new google.maps.Marker({position: pos, map: map});
+        for (const [name, position] of Object.entries(this.parkLocs)) {
+            let marker = new google.maps.Marker({position, map});
             let infowindow = new google.maps.InfoWindow({ content: name });
             marker.addListener('click', function() {
                 infowindow.open(map, marker);

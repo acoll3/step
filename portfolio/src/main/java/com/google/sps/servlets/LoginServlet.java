@@ -34,7 +34,7 @@ public class LoginServlet extends HttpServlet {
     response.setContentType("text/plain");
     UserService userService = UserServiceFactory.getUserService();
 
-    // If a user is logged in, return the exact object {success: true}.
+    // If a user is logged in, return 'true'.
     if (userService.isUserLoggedIn()) {
       response.getWriter().println("true");
     } 
