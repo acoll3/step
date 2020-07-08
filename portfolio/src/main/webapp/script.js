@@ -24,10 +24,10 @@ class Portfolio {
                             sanblas: { lat: 9.5702911, lng: -78.9272882 }, 
                             fjord: { lat: -45.4572629, lng: 167.2282707 } 
                          };
-        this.parkLocs = { zion: { lat: 37.3220096, lng: -113.1833194 } ,
-                          rockyMountain: { lat: 40.3503939, lng: -105.9566636 },
-                          grandTeton: { lat: 43.6594418, lng: -111.000682 },
-                          joshuaTree: { lat: 33.8987129, lng: -116.4211304},
+        this.parkLocs = { 'Zion': { lat: 37.3220096, lng: -113.1833194 } ,
+                          'Rocky Mountain': { lat: 40.3503939, lng: -105.9566636 },
+                          'Grand Teton': { lat: 43.6594418, lng: -111.000682 },
+                          'Joshua Tree': { lat: 33.8987129, lng: -116.4211304},
                         };
     }
 
@@ -121,7 +121,12 @@ class Portfolio {
         let map = this.createMap(mapOptions, 'parks');
 
         for (let loc of Object.entries(this.parkLocs)) {
-            let marker = new google.maps.Marker({position: loc[1], map: map});
+            let name = loc[0], pos = loc[1];
+            let marker = new google.maps.Marker({position: pos, map: map});
+            let infowindow = new google.maps.InfoWindow({ content: name });
+            marker.addListener('click', function() {
+                infowindow.open(map, marker);
+            });
         }
 
     }

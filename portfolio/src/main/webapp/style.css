@@ -1,6 +1,7 @@
  html, body {
     height: 100%;
     font-family: "Montserrat";
+    margin: 3px;
 }
 
 #header {
@@ -57,6 +58,7 @@
 } 
 
 #footer {
+    margin: 3px;
     border-top: 3px solid black;
     display: flex;
     justify-content: center;
