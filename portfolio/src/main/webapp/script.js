@@ -38,22 +38,28 @@ class Portfolio {
         await this.getComments();
         this.setupPlaceMaps();
         this.setupParkMap();
+        this.setupFooter();
     }
 
     /**
-    * Removes all comments from the DOM.
+    * Sets up display of the footer (either a login link or comments form) based on the login status of the user.
     */
     async setupFooter() {
-        let path = 'login';
-        let status = await fetch(path);
+        let path = '/login';
+        let res = await fetch(path);
+        let loginStatus = await res.text();
+        console.log(loginStatus);
 
         /* If the user is logged in, hide the login link and display the comments form. */
-        if (status === 'true') {
-            document.getElementById('login-footer').display = 'hidden';
-            document.getElementById('comments-footer').display = 'flex';
+        if (loginStatus.trim() === 'true') {
+            console.log('logged in');
+            document.getElementById('login-footer').style.display = 'none';
+            document.getElementById('comments-footer').style.display = 'flex';
         } else { // hide comments and show login if user is not logged in
+            console.log('not logged in');
+            document.getElementById('login-link').href = loginStatus;
             document.getElementById('login-footer').display = 'flex';
-            document.getElementById('comments-footer').display = 'hidden';
+            document.getElementById('comments-footer').display = 'none';
         }
     }
 
@@ -86,7 +92,7 @@ class Portfolio {
         if (res.status === 404){
             alert("Empty datastore.");
         } else if (res.status === 500) {
-            alert('Error: invalid count requested.  Fewer than ${this.numComments} comments exist.');
+            alert('Error: invalid count requested.  Fewer than ' + this.numComments + ' comments exist.');
         } else 
         if (res.status !== 200) {
             alert('Error generated in HTTP response from servlet');
@@ -94,7 +100,8 @@ class Portfolio {
 
         let comments = await res.json();
         let parentList = document.getElementById("comments");
-        comments.forEach(comment => parentList.appendChild(this.createListElement(comment)));
+        comments.forEach(comment => 
+            parentList.appendChild(this.createListElement(comment[0] + ' posted by ' + comment[1])));
     }
 
     /**

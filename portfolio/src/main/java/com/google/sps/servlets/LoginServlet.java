@@ -36,10 +36,11 @@ public class LoginServlet extends HttpServlet {
 
     // If a user is logged in, return 'true'.
     if (userService.isUserLoggedIn()) {
-      response.getWriter().println("true");
+        response.getWriter().println("true");
     } 
     else {
-        response.getWriter().println("false");
+        String loginUrl = userService.createLoginURL("/index.html");
+        response.getWriter().println(loginUrl);
     }
 
   }

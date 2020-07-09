@@ -32,7 +32,13 @@ import com.google.gson.*;
 public class DataServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    int numComments = Integer.parseInt(request.getParameter("number"));
+      int numComments = 0;
+
+      /* Check that the request includes a non-null number parameter; if not, keep numComments at 0 by default */
+      if (request.getParameter("number")!= null) {
+          numComments = Integer.parseInt(request.getParameter("number"));
+      }
+    
     Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -45,16 +51,20 @@ public class DataServlet extends HttpServlet {
         return;
     }
 
-    ArrayList<String> comments = new ArrayList<String>();
+    ArrayList<ArrayList<String>> commentData = new ArrayList<ArrayList<String>>();
     Iterator<Entity> iter = results.asIterable().iterator();
     for (int i = 0; i < numComments; i++) {
         Entity e = iter.next();
         String comment = (String) e.getProperty("text");
-        comments.add(comment);
+        String email = (String) e.getProperty("email");
+        ArrayList<String> data = new ArrayList<String>();
+        data.add(comment);
+        data.add(email);
+        commentData.add(data);
     }
 
     response.setContentType("application/json;");
-    response.getWriter().println(convertToJsonUsingGson(comments));
+    response.getWriter().println(convertToJsonUsingGson(commentData));
   }
 
    @Override
@@ -84,9 +94,9 @@ public class DataServlet extends HttpServlet {
   /**
    * Converts an ArrayList instance into a JSON string using the Gson library.
    */
-  private String convertToJsonUsingGson(ArrayList<String> comments) {
+  private String convertToJsonUsingGson(ArrayList<ArrayList<String>> data) {
     Gson gson = new Gson();
-    String json = gson.toJson(comments);
+    String json = gson.toJson(data);
     return json;
   }
 }
