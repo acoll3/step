@@ -32,12 +32,13 @@ import com.google.gson.*;
 public class DataServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-      int numComments = 0;
+    int numComments = 0;
 
-      /* Check that the request includes a non-null number parameter; if not, keep numComments at 0 by default */
-      if (request.getParameter("number")!= null) {
-          numComments = Integer.parseInt(request.getParameter("number"));
-      }
+    try {
+        numComments = Integer.parseInt(request.getParameter("number"));
+    } catch (NumberFormatException e) {
+        // Leave the default value alone.
+    }
     
     Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
 
@@ -51,16 +52,13 @@ public class DataServlet extends HttpServlet {
         return;
     }
 
-    ArrayList<ArrayList<String>> commentData = new ArrayList<ArrayList<String>>();
+    HashMap<String, String> commentData = new HashMap<String, String>();
     Iterator<Entity> iter = results.asIterable().iterator();
     for (int i = 0; i < numComments; i++) {
         Entity e = iter.next();
         String comment = (String) e.getProperty("text");
         String email = (String) e.getProperty("email");
-        ArrayList<String> data = new ArrayList<String>();
-        data.add(comment);
-        data.add(email);
-        commentData.add(data);
+        commentData.put(comment, email);
     }
 
     response.setContentType("application/json;");
@@ -73,8 +71,8 @@ public class DataServlet extends HttpServlet {
 
     /* Only logged-in users can post comments. */
     if (!userService.isUserLoggedIn()) {
-      response.sendRedirect("/index.html");
-      return;
+    response.sendRedirect("/index.html");
+    return;
     }
 
     String comment = request.getParameter("comment-input");
@@ -92,9 +90,9 @@ public class DataServlet extends HttpServlet {
   }
 
   /**
-   * Converts an ArrayList instance into a JSON string using the Gson library.
+   * Converts a Map<String, String> instance into a JSON string using the Gson library.
    */
-  private String convertToJsonUsingGson(ArrayList<ArrayList<String>> data) {
+  private String convertToJsonUsingGson(HashMap<String, String> data) {
     Gson gson = new Gson();
     String json = gson.toJson(data);
     return json;
