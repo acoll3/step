@@ -46,19 +46,15 @@ public class DataServlet extends HttpServlet {
     PreparedQuery results = datastore.prepare(query);
 
     /* If no comments are returned by the query, set a descriptive HTTP status code to signify an error. */
-    int size = results.countEntities(FetchOptions.Builder.withLimit(1000));
-    if (size == 0) {
+    Iterable<Entity> commentEntities = results.asIterable(FetchOptions.Builder.withLimit(numComments));
+    if (!commentEntities.iterator().hasNext()) {
         response.sendError(404);
         return;
     }
 
-    HashMap<String, String> commentData = new HashMap<String, String>();
-    Iterator<Entity> iter = results.asIterable().iterator();
-    for (int i = 0; i < numComments; i++) {
-        Entity e = iter.next();
-        String comment = (String) e.getProperty("text");
-        String email = (String) e.getProperty("email");
-        commentData.put(comment, email);
+    ArrayList<Map<String, Object>> commentData = new ArrayList<Map<String, Object>>();
+    for (Entity e: commentEntities) {
+        commentData.add(e.getProperties());
     }
 
     response.setContentType("application/json;");
@@ -90,9 +86,9 @@ public class DataServlet extends HttpServlet {
   }
 
   /**
-   * Converts a Map<String, String> instance into a JSON string using the Gson library.
+   * Converts a Array<Map<String, String>> instance into a JSON string using the Gson library.
    */
-  private String convertToJsonUsingGson(HashMap<String, String> data) {
+  private String convertToJsonUsingGson(ArrayList<Map<String, Object>> data) {
     Gson gson = new Gson();
     String json = gson.toJson(data);
     return json;

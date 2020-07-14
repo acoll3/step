@@ -97,9 +97,7 @@ class Portfolio {
 
         let comments = await res.json();
         let parentList = document.getElementById("comments");
-        for (let [comment, email] of Object.entries(comments)) {
-            parentList.appendChild(this.createListElement(`${comment} posted by ${email}`));
-        }
+        comments.forEach(comment => parentList.appendChild(this.createListElement(`${comment.text} posted by ${comment.email}`)));
     }
 
     /**
