@@ -22,7 +22,7 @@ import java.util.Set;
 
 public final class FindMeetingQuery {
 
- /*
+ /**
   * Return true if none of the people in the collection are mandatory attendees of the given event.
   */
   private boolean isFree(Event event, Collection<String> people) {
@@ -35,7 +35,7 @@ public final class FindMeetingQuery {
     return true;
   }
 
- /*
+ /**
   * Return a new TimeRange that merges two existing TimeRanges. Assume range1 and range2 either overlap
   * or contain each other.
   */
@@ -56,15 +56,15 @@ public final class FindMeetingQuery {
     return TimeRange.fromStartEnd(start, end, false);
   }
 
- /*
+ /**
   * Return true if none of the people in the collection are mandatory attendees of the given event.
   */
   private boolean canBeMerged(TimeRange range1, TimeRange range2) {
     return (range1.overlaps(range2) || range1.contains(range2) || range2.contains(range1) || range1.equals(range2));
   }
 
- /*
-  * Return a new ArrayList<TimeRange> consisting of only time ranges that are not possible to be merged
+ /**
+  * Return a new ArrayList<TimeRange> consisting of non-contiguous time ranges that are not possible to be merged
   * (do not overlap or contain each other).
   */
   private ArrayList<TimeRange> mergeAllRanges(ArrayList<TimeRange> ranges) {
@@ -91,7 +91,7 @@ public final class FindMeetingQuery {
     return mergedRanges;
   }
 
- /* 
+ /**
   * Return whether or not the given possible range for a meeting is valid (start and end times are possible and 
   * the given time range is long enough to fit the meeting). 
   */
@@ -99,7 +99,7 @@ public final class FindMeetingQuery {
       return (possibleRange.end() > possibleRange.start() && possibleRange.duration() >= duration);
   }
 
-  /* 
+  /**
    * Return a collection of TimeRanges representing the free gaps in between the merged blocked time ranges. 
    */
   private Collection<TimeRange> getFreeRanges(ArrayList<TimeRange> mergedBlockedRanges, long duration) {
@@ -122,6 +122,10 @@ public final class FindMeetingQuery {
     return freeRanges;
   }
 
+  /**
+   * Given a meeting request and a collection of events, query the events and return a collection of
+   * time ranges representing the free times available for the meeting. 
+   */
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
     if (request.getDuration() > TimeRange.WHOLE_DAY.duration()) {
         return new ArrayList<TimeRange>();
@@ -143,7 +147,6 @@ public final class FindMeetingQuery {
 
     // If one or more slots exist with optional attendees or there are no mandatory attendees, return these slots.
     if (freeRanges.size() > 0 || request.getAttendees().size() == 0) {
-        System.out.println("one or more slots exist for optional attendees");
         return freeRanges;
     } else { // find time slots just for mandatory attendees
     
@@ -157,7 +160,6 @@ public final class FindMeetingQuery {
         });
         Collections.sort(blockedRanges, TimeRange.ORDER_BY_START);
         ArrayList<TimeRange> mergedRanges = mergeAllRanges(blockedRanges);
-        System.out.println("just mandatory attendees");
         return getFreeRanges(mergedRanges, request.getDuration());
     }
   }
