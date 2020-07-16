@@ -16,12 +16,10 @@ package com.google.sps.servlets;
 
 import java.io.IOException;
 import java.util.*;
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -29,48 +27,70 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.RequestDispatcher;
 import com.google.gson.*;
 
-/** Servlet that returns some example content. */
+/** Servlet that returns comment data created by the user. */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    int numComments = 0;
+
+    try {
+        numComments = Integer.parseInt(request.getParameter("number"));
+    } catch (NumberFormatException e) {
+        // Leave the default value alone.
+    }
+    
     Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
-    int numComments = Integer.parseInt(request.getParameter("number"));
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
 
-    ArrayList<String> comments = new ArrayList<String>();
-    Iterator<Entity> iter = results.asIterable().iterator();
-    for (int i = 0; i < numComments; i++) {
-        Entity e = iter.next();
-        String comment = (String) e.getProperty("text");
-        comments.add(comment);
+    /* If no comments are returned by the query, set a descriptive HTTP status code to signify an error. */
+    Iterable<Entity> commentEntities = results.asIterable(FetchOptions.Builder.withLimit(numComments));
+    if (!commentEntities.iterator().hasNext()) {
+        response.sendError(404);
+        return;
     }
+
+    ArrayList<Map<String, Object>> commentData = new ArrayList<Map<String, Object>>();
+    for (Entity e: commentEntities) {
+        commentData.add(e.getProperties());
+    }
+
     response.setContentType("application/json;");
-    response.getWriter().println(convertToJsonUsingGson(comments));
+    response.getWriter().println(convertToJsonUsingGson(commentData));
   }
 
    @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    UserService userService = UserServiceFactory.getUserService();
+
+    /* Only logged-in users can post comments. */
+    if (!userService.isUserLoggedIn()) {
+    response.sendRedirect("/index.html");
+    return;
+    }
+
     String comment = request.getParameter("comment-input");
     long timestamp = System.currentTimeMillis();
+    String email = userService.getCurrentUser().getEmail();
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     Entity taskEntity = new Entity("Comment");
     taskEntity.setProperty("text", comment);
     taskEntity.setProperty("timestamp", timestamp);
+    taskEntity.setProperty("email", email);
     datastore.put(taskEntity);
 
     response.sendRedirect("/index.html");
   }
 
   /**
-   * Converts an ArrayList instance into a JSON string using the Gson library.
+   * Converts a Array<Map<String, String>> instance into a JSON string using the Gson library.
    */
-  private String convertToJsonUsingGson(ArrayList<String> comments) {
+  private String convertToJsonUsingGson(ArrayList<Map<String, Object>> data) {
     Gson gson = new Gson();
-    String json = gson.toJson(comments);
+    String json = gson.toJson(data);
     return json;
   }
 }

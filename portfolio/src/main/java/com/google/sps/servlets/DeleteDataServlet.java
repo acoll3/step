@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.RequestDispatcher;
 import com.google.gson.*;
 
-/** Servlet that returns some example content. */
+/** Servlet that deletes and clears all comments from the given datastore. */
 @WebServlet("/delete-data")
 public class DeleteDataServlet extends HttpServlet {
 

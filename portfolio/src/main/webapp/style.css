@@ -1,5 +1,7 @@
-body {
+ html, body {
+    height: 100%;
     font-family: "Montserrat";
+    margin: 3px;
 }
 
 #header {
@@ -25,6 +27,7 @@ body {
 
 #gallery >img {
     width: 80%;
+    margin: 3px;
 }
 
 #thoughts {
@@ -41,18 +44,28 @@ body {
     padding: 5px;
 }
 
-#links {
+#maps {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     width: 20%;
 }
 
-#footer {
+.map {
+    height: 25%;
+    width: 100%;
+    margin: 3px;
+} 
+
+.footer {
+    margin: 3px;
     border-top: 3px solid black;
     display: flex;
     justify-content: center;
+}
+
+#comments-footer {
+    display: none;
 }
 
 #count-options, #delete-button {

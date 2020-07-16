@@ -5,6 +5,7 @@
     <title>Andrea Collins's Portfolio</title>
     <link rel="stylesheet" href="style.css">
     <script type="module" src="script.js" defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDjileKluENoIf83Uic14FhOzbEALIsmXY"></script>
   </head>
   <body>
       <div id="header"> 
@@ -21,25 +22,36 @@
         </div>
         <div id="thoughts"> 
             <h2>Thoughts</h2>
-            <div class="thought"> 
-                <h3>Thought for 6/22</h3>
-                <p>Thought for today: Excited for the rest of the summer at Google!</p>
+             <div class="thought"> 
+                <h3>Thought for 7/7</h3>
+                <p>I ate the most delicious strawberry chocolate bar today.</p>
             </div>
             <div class="thought"> 
+                <h3>Thought for 7/7</h3>
+                <p>JavaScript is an odd language with many quirks.</p>
+            </div>
+                        <div class="thought"> 
                 <h3>Thought for 6/23</h3>
                 <p>Working in a sunlit area is very relaxing.</p>
             </div>
+            <div class="thought"> 
+                <h3>Thought for 6/22</h3>
+                <p>Excited for the rest of the summer at Google!</p>
+            </div>
         </div>
-        <div id="links">
-            <h2>Favorite Articles</h2>
-            <a href="https://www.theatlantic.com/science/archive/2017/01/why-fractals-are-so-soothing/514520/">Why Fractals Are So Soothing</a>
-            <a href="https://www.theatlantic.com/magazine/archive/2019/12/stop-trying-to-raise-successful-kids/600751/">Stop Trying to Raise Successful Kids</a>
-
+        <div id="maps">
+            <h2>My Favorite National Parks</h2>
+            <div class="map" id="parks"></div>
+            <h2>Places I Want to Visit</h2>
+            <div class="map" id="glacier"></div>
+            <div class="map" id="edinburgh"></div>
+            <div class="map" id="sanblas"></div>
+            <div class="map" id="fjord"></div>
         </div>
         
     </div>
 
-    <div id="footer">
+    <div class="footer" id="comments-footer">
         <select name="count-options" id="count-options"> 
             <option value="1">One</option>
             <option value="2">Two</option>
@@ -55,6 +67,10 @@
         </form>
         <h3>Comments:</h3>
         <ul id="comments"</ul>
+    </div>
+
+    <div class="footer" id="login-footer"> 
+        <a href="/" id="login-link">Login</a>
     </div>
   </body>
 </html>
