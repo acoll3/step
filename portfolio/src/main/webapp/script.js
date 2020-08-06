@@ -86,12 +86,9 @@ class Portfolio {
         let res = await fetch(path);
 
         /* Check for errors in the HTTP response and alert the user. */
-        if (res.status === 404){
-            alert("Empty datastore.");
-        } else if (res.status === 500) {
-            alert(`Error: invalid count requested.  Fewer than ${this.numComments} comments exist.`);
-        } else 
-        if (res.status !== 200) {
+        if (res.status === 404){ // empty datastore or too many comments requested
+            return;
+        } else if (res.status !== 200) {
             alert('Error generated in HTTP response from servlet');
         }
 
